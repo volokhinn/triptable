@@ -1,25 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTrips } from '../../redux/slices/tripsSlice';
 
 const TripsTable = () => {
   const dispatch = useDispatch();
   const { orders, loading, error } = useSelector((state) => state.trips);
+  const [selectedTrip, setSelectedTrip] = useState(null);
 
   useEffect(() => {
     dispatch(fetchTrips());
   }, [dispatch]);
 
-  console.log(orders);
-
   const formatPhoneNumber = (phoneNumber) => {
-    // Регулярное выражение для извлечения только цифр из строки
     let digits = phoneNumber.replace(/\D/g, '');
-    // Удаляем первую цифру, если она равна 7 (так как все номера начинаются с 7)
     if (digits.charAt(0) === '7') {
       digits = digits.substring(1);
     }
-    // Применяем маску к номеру телефона
     return `+7 (${digits.substring(0, 3)})-${digits.substring(3, 6)}-${digits.substring(
       6,
       8,
@@ -32,6 +28,11 @@ const TripsTable = () => {
     }
     return order.passengers.map((passenger) => passenger[field]).join(', ');
   };
+
+  const handleRowClick = (order) => {
+    setSelectedTrip(order === selectedTrip ? null : order);
+  };
+
   return (
     <div>
       {loading && <div>Loading...</div>}
@@ -48,11 +49,29 @@ const TripsTable = () => {
         <tbody>
           {orders &&
             orders.map((order) => (
-              <tr key={order.id}>
-                <td>{getPassengerInfo(order, 'name')}</td>
-                <td>{getPassengerInfo(order, 'phone')}</td>
-                <td>{order.status}</td>
-              </tr>
+              <React.Fragment key={order.order_id}>
+                <tr>
+                  <td>{getPassengerInfo(order, 'name')}</td>
+                  <td>{getPassengerInfo(order, 'phone')}</td>
+                  <td>{order.status}</td>
+                  <td onClick={() => handleRowClick(order)}>
+                    <button>{!selectedTrip ? 'Show details' : 'Hide details'}</button>
+                  </td>
+                </tr>
+                {selectedTrip === order && (
+                  <tr>
+                    <td>
+                      <div>
+                        <h3>Additional Information:</h3>
+                        <p>Destination Address: {order.destination_address}</p>
+                        <p>Location Address: {order.location_address}</p>
+                        <p>Car Class: {order.car_data.class}</p>
+                        <p>Car Model: {order.car_data.models}</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
             ))}
         </tbody>
       </table>
