@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/slices/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './AuthWindow.module.scss';
 
 import logo from '../../img/iway.svg';
 
-const LoginWindow = () => {
+const AuthWindow = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = () => {
     dispatch(login({ login: username, password: password })).then((result) => {
       if (login.fulfilled.match(result)) {
-        console.log(result.payload.result.token);
+        const token = result.payload.result.token;
+        localStorage.setItem('token', token);
+        console.log(token);
+        navigate('/trips');
       } else if (login.rejected.match(result)) {
         const payload = result.payload;
         if (payload.error && payload.error.message) {
@@ -29,7 +35,7 @@ const LoginWindow = () => {
     <div className={styles.wrapper}>
       <img src={logo} alt="iway" />
       <h1 className={styles.title}>Авторизация</h1>
-      <div className={styles.inputs}>
+      <div className={`${styles.inputs} ${error && styles.errorinputs}`}>
         <input
           type="text"
           placeholder="Логин"
@@ -46,9 +52,9 @@ const LoginWindow = () => {
       <button className={styles.btn} onClick={handleLogin}>
         Войти
       </button>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+      {error && <div className={styles.error}>{error}</div>}
     </div>
   );
 };
 
-export default LoginWindow;
+export default AuthWindow;

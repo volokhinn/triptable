@@ -48,3 +48,14 @@
 
     }
 }
+
+.error {
+    margin-top: 15px;
+    color: red;
+}
+
+.errorinputs {
+    & input {
+        border: 2px solid red;
+    }
+}
