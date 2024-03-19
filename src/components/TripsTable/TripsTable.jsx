@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTripsByPage } from '../../redux/slices/tripsSlice';
+import Loader from '../Loader/Loader';
 import styles from './TripsTable.module.scss';
 import TripRow from '../TripRow/TripRow';
 
@@ -33,7 +34,9 @@ const TripsTable = () => {
       {error && <div>Error: {error}</div>}
       <h1>Trips</h1>
       {loading ? (
-        <div>Loading...</div>
+        <div>
+          <Loader />
+        </div>
       ) : (
         <div>
           <table className={styles.table}>
