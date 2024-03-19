@@ -12,10 +12,26 @@ const TripsTable = () => {
 
   console.log(orders);
 
-  const getPassengerInfo = (order, field) => {
-    return order.passengers.map((passenger) => passenger[field]).join(', ');
+  const formatPhoneNumber = (phoneNumber) => {
+    // Регулярное выражение для извлечения только цифр из строки
+    let digits = phoneNumber.replace(/\D/g, '');
+    // Удаляем первую цифру, если она равна 7 (так как все номера начинаются с 7)
+    if (digits.charAt(0) === '7') {
+      digits = digits.substring(1);
+    }
+    // Применяем маску к номеру телефона
+    return `+7 (${digits.substring(0, 3)})-${digits.substring(3, 6)}-${digits.substring(
+      6,
+      8,
+    )}-${digits.substring(8)}`;
   };
 
+  const getPassengerInfo = (order, field) => {
+    if (field === 'phone') {
+      return formatPhoneNumber(order.passengers[0][field]);
+    }
+    return order.passengers.map((passenger) => passenger[field]).join(', ');
+  };
   return (
     <div>
       {loading && <div>Loading...</div>}
