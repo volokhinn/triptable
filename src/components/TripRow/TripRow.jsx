@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './TripRow.module.scss';
 
 const TripRow = ({ order }) => {
@@ -19,13 +19,32 @@ const TripRow = ({ order }) => {
     )}-${digits.substring(8)}`;
   };
 
+  const [width, setWidth] = useState(window.innerWidth);
+  const breakpoint = 540;
+  useEffect(() => {
+    const handleResizeWindow = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResizeWindow);
+    return () => {
+      window.removeEventListener('resize', handleResizeWindow);
+    };
+  }, []);
+
   return (
     <React.Fragment>
       <tr>
-        <td>{order.passengers[0].name}</td>
-        <td>{formatPhoneNumber(order.passengers[0].phone)}</td>
-        <td>{order.status}</td>
         <td>
+          {width < breakpoint ? <div>Name</div> : ''}
+          {order.passengers[0].name}
+        </td>
+        <td>
+          {width < breakpoint ? <div>Phone</div> : ''}
+          {formatPhoneNumber(order.passengers[0].phone)}
+        </td>
+        <td>
+          {width < breakpoint ? <div>Status</div> : ''}
+          {order.status}
+        </td>
+        <td className={styles.details_td}>
           <button className={styles.details_btn} onClick={() => handleRowClick(order)}>
             {selectedTrip ? 'Hide details' : 'Show details'}
           </button>

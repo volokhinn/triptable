@@ -7,8 +7,25 @@
     }
 
     &_row {
-        background-color: #4d5547;
-        color: #fff;
         width: 100%;
+
+        & td {
+            background-color: #fff;
+            color: #4d5547;
+            font-weight: 500;
+        }
+    
+    }
+}
+
+@media (max-width: 540px) {
+    td.details {
+        &_td {
+            border-bottom: 10px solid #fff !important;
+        }
+    }
+
+    .details_row td:last-child {
+        border-bottom: 10px solid #fff;
     }
 }

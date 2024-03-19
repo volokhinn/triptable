@@ -81,4 +81,43 @@
         width: fit-content;
         gap: 15px;
     }
+
+    .table {
+        & td {
+            padding: 10px;
+            width: 150px;
+            font-size: 14px;
+        }
+
+        & thead tr th {
+            font-size: 14px;
+        }
+    }
+
+    .pagination {
+        &_wrapper {
+            display: flex;
+            justify-content: center;
+        }
+        &_btn {
+            padding: 6px 8px;
+        }
+    }
+}
+
+@media (max-width: 540px) {
+    .table {
+
+        & thead {
+            display: none;
+        }
+
+        & td {
+            width: 100%;
+            display: block;
+            border-bottom: 0;
+            padding: 5px;
+            border-bottom: 1px solid #fff;
+        }
+    }
 }

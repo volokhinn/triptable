@@ -113,22 +113,24 @@ const TripsTable = () => {
                 {trips && trips.map((order) => <TripRow key={order.order_id} order={order} />)}
               </tbody>
             </table>
-            <div className={styles.pagination}>
-              <button
-                className={styles.pagination_btn}
-                onClick={() => loadTripsForPage(currentPage - 1)}
-                disabled={currentPage === 1}>
-                {`<`}
-              </button>
-              <span>
-                Страница {currentPage} из {pageData && pageData.page_count}
-              </span>
-              <button
-                className={styles.pagination_btn}
-                onClick={() => loadTripsForPage(currentPage + 1)}
-                disabled={currentPage === (pageData && pageData.page_count)}>
-                {`>`}
-              </button>
+            <div className={styles.pagination_wrapper}>
+              <div className={styles.pagination}>
+                <button
+                  className={styles.pagination_btn}
+                  onClick={() => loadTripsForPage(currentPage - 1)}
+                  disabled={currentPage === 1}>
+                  {`<`}
+                </button>
+                <span>
+                  Страница {currentPage} из {pageData && pageData.page_count}
+                </span>
+                <button
+                  className={styles.pagination_btn}
+                  onClick={() => loadTripsForPage(currentPage + 1)}
+                  disabled={currentPage === (pageData && pageData.page_count)}>
+                  {`>`}
+                </button>
+              </div>
             </div>
           </div>
         )}
