@@ -21,3 +21,25 @@
         }
     }
 }
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    margin-bottom: 60px;
+
+    &_btn {
+        background: transparent;
+        border: 1px solid #4d5547;
+        border-radius: 50%;
+        padding: 13px 15px;
+        cursor: pointer;
+        transition: .2s;
+
+        &:hover {
+            background: #4d5547;
+            color: #fff;
+        }
+    }
+}

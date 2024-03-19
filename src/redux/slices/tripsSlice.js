@@ -1,41 +1,51 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const fetchTrips = createAsyncThunk('trips/fetchTrips', async (token) => {
-  try {
-    const response = await axios.get(
-      'https://transstage1.iwayex.com/transnextgen/v3/orders/trips',
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+export const fetchTripsByPage = createAsyncThunk(
+  'trips/fetchTripsByPage',
+  async ({ token, page }) => {
+    try {
+      const response = await axios.get(
+        `https://transstage1.iwayex.com/transnextgen/v3/orders/trips?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      },
-    );
-    return response.data.result.orders;
-  } catch (error) {
-    throw Error(error.response.data);
-  }
-});
+      );
+      console.log(response);
+      return {
+        trips: response.data.result.orders,
+        pageData: response.data.result.page_data,
+      };
+    } catch (error) {
+      throw Error(error.response.data);
+    }
+  },
+);
 
 const tripSlice = createSlice({
   name: 'trips',
   initialState: {
     trips: [],
+    pageData: null,
     loading: false,
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTrips.pending, (state) => {
+      .addCase(fetchTripsByPage.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchTrips.fulfilled, (state, action) => {
+      .addCase(fetchTripsByPage.fulfilled, (state, action) => {
         state.loading = false;
-        state.trips = action.payload;
+        state.trips = action.payload.trips;
+        state.pageData = action.payload.pageData;
       })
-      .addCase(fetchTrips.rejected, (state, action) => {
+
+      .addCase(fetchTripsByPage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
