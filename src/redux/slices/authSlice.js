@@ -1,19 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { loginRequest } from '../../api/api';
 
 const initialState = {
   error: null,
 };
 
-export const login = createAsyncThunk('auth/login', async (userData, { rejectWithValue }) => {
+export const login = createAsyncThunk('auth/login', async (userData) => {
   try {
-    const response = await axios.post(
-      'https://transstage1.iwayex.com/transnextgen/v3/auth/login',
-      userData,
-    );
-    return response.data;
+    return await loginRequest(userData);
   } catch (error) {
-    return rejectWithValue(error.response.data);
+    throw Error(error);
   }
 });
 
