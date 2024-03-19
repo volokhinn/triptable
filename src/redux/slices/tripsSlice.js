@@ -1,4 +1,3 @@
-// tripSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -34,7 +33,7 @@ const tripSlice = createSlice({
       })
       .addCase(fetchTrips.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders = action.payload;
+        state.trips = action.payload;
       })
       .addCase(fetchTrips.rejected, (state, action) => {
         state.loading = false;

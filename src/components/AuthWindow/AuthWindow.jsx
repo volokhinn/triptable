@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { fetchTrips } from '../../redux/slices/tripsSlice';
 
 import styles from './AuthWindow.module.scss';
 
@@ -21,13 +20,7 @@ const AuthWindow = () => {
       if (login.fulfilled.match(result)) {
         const token = result.payload.result.token;
         localStorage.setItem('token', token);
-        console.log(token);
-
-        if (token) {
-          dispatch(fetchTrips(token)).then(() => {
-            navigate('/trips');
-          });
-        }
+        navigate('/trips');
       } else if (login.rejected.match(result)) {
         const payload = result.payload;
         if (payload.error && payload.error.message) {

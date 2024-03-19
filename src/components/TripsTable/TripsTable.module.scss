@@ -1,0 +1,23 @@
+.table {
+    width: 100%;
+    border-spacing: 0;
+
+    & td {
+        text-align: center;
+        width: 300px;
+        padding: 20px;
+        background-color: #4d5547;
+        color: #fff;
+        border-bottom: 4px solid #fff;
+    }
+    
+    & thead {
+        background-color: #4d5547;
+        color: #fff;
+
+        & tr th {
+            border-bottom: 8px solid #fff;
+            padding: 20px;
+        }
+    }
+}

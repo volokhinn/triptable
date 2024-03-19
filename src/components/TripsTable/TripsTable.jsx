@@ -1,80 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTrips } from '../../redux/slices/tripsSlice';
+import styles from './TripsTable.module.scss';
+import TripRow from '../TripRow/TripRow';
 
 const TripsTable = () => {
   const dispatch = useDispatch();
-  const { orders, loading, error } = useSelector((state) => state.trips);
-  const [selectedTrip, setSelectedTrip] = useState(null);
+  const { trips, loading, error } = useSelector((state) => state.trips);
 
   useEffect(() => {
-    dispatch(fetchTrips());
-  }, [dispatch]);
-
-  const formatPhoneNumber = (phoneNumber) => {
-    let digits = phoneNumber.replace(/\D/g, '');
-    if (digits.charAt(0) === '7') {
-      digits = digits.substring(1);
+    const token = localStorage.getItem('token');
+    if (token && !trips.length) {
+      dispatch(fetchTrips(token));
     }
-    return `+7 (${digits.substring(0, 3)})-${digits.substring(3, 6)}-${digits.substring(
-      6,
-      8,
-    )}-${digits.substring(8)}`;
-  };
+  }, [dispatch, trips.length]);
 
-  const getPassengerInfo = (order, field) => {
-    if (field === 'phone') {
-      return formatPhoneNumber(order.passengers[0][field]);
-    }
-    return order.passengers.map((passenger) => passenger[field]).join(', ');
-  };
-
-  const handleRowClick = (order) => {
-    setSelectedTrip(order === selectedTrip ? null : order);
-  };
+  console.log(trips);
 
   return (
     <div>
-      {loading && <div>Loading...</div>}
       {error && <div>Error: {error}</div>}
-      <h2>Trips</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Passenger Name</th>
-            <th>Phone Number</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders &&
-            orders.map((order) => (
-              <React.Fragment key={order.order_id}>
-                <tr>
-                  <td>{getPassengerInfo(order, 'name')}</td>
-                  <td>{getPassengerInfo(order, 'phone')}</td>
-                  <td>{order.status}</td>
-                  <td onClick={() => handleRowClick(order)}>
-                    <button>{!selectedTrip ? 'Show details' : 'Hide details'}</button>
-                  </td>
-                </tr>
-                {selectedTrip === order && (
-                  <tr>
-                    <td>
-                      <div>
-                        <h3>Additional Information:</h3>
-                        <p>Destination Address: {order.destination_address}</p>
-                        <p>Location Address: {order.location_address}</p>
-                        <p>Car Class: {order.car_data.class}</p>
-                        <p>Car Model: {order.car_data.models}</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
-            ))}
-        </tbody>
-      </table>
+      <h1>Trips</h1>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Passenger Name</th>
+              <th>Phone Number</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {trips && trips.map((order) => <TripRow key={order.order_id} order={order} />)}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
