@@ -54,15 +54,15 @@ const TripsTable = () => {
 
   const handleFilter = () => {
     const token = localStorage.getItem('token');
-    dispatch(
-      fetchTripsByPageAndFilters({
-        token,
-        page: 1,
-        names: filterNames,
-        email: filterPhone,
-        order_status: filterStatus,
-      }),
-    );
+    const filteredParams = {
+      token,
+      page: 1,
+      ...(filterNames && { names: filterNames }),
+      ...(filterPhone && { email: filterPhone }),
+      ...(filterStatus && { order_status: filterStatus }),
+    };
+    dispatch(fetchTripsByPageAndFilters(filteredParams));
+    setCurrentPage(1);
   };
 
   return (

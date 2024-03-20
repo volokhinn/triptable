@@ -23,11 +23,13 @@ export const fetchTrips = async ({ token, page, names, email, order_status }) =>
         names,
         email,
         order_status,
+        items_on_page: 25,
       },
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
     return {
       trips: response.data.result.orders,
       pageData: response.data.result.page_data,
